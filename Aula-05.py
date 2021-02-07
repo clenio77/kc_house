@@ -89,8 +89,6 @@ def main():
         if st.sidebar.checkbox("Interactive Map by Property Price"):
             st.subheader('**Map for Level!** ')
             houses = df[['id', 'lat', 'long', 'price', 'level']].copy()
-            #map_interative(houses)
-            st.write(houses.head(3))
             fig = px.scatter_mapbox(
                 houses,
                 lat='lat',
@@ -120,7 +118,7 @@ def main():
             elif selector == "No_waterFront":
                 houses['is_waterFront'] = df['is_waterfront'] == 'no'
             st.write(houses)
-            add_filter_interactive(df)
+            #add_filter_interactive(df)
 
 
         if st.sidebar.checkbox("Map for Price"):
@@ -136,7 +134,6 @@ def main():
                                              price_avg)
 
             houses = df[df['price'] < price_slider][['id', 'lat', 'long', 'price','level']]
-            st.write(houses.head())
             fig = px.scatter_mapbox(
                 houses,
                 lat='lat',
@@ -164,7 +161,6 @@ def main():
                                              bedrooms_avg)
 
             houses = df[df['bedrooms'] < bedrooms_slider][['id', 'lat', 'long', 'price','level','bedrooms']]
-            st.dataframe(houses.head())
             fig = px.scatter_mapbox(houses,
                                     lat='lat',
                                     lon='long',
@@ -175,7 +171,7 @@ def main():
                                     zoom=10)
             fig.update_layout(mapbox_style='open-street-map')
             fig.update_layout(height=600, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
-            st.write(fig)
+            st.plotly_chart(fig)
             #st.write(fig)
 
     elif choice == 'Questions':
@@ -189,7 +185,7 @@ def main():
 
         if st.sidebar.checkbox("1. How many properties per level?"):
             #add_level(df)
-            st.write('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
+            st.table('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
             st.write('**Nivel 1:** preço entre R$ 321.950 e R$ 450.000 = **{}**.'.format(df[df['level'] == 'nivel_1'].shape[0]))
             st.write('**Nivel 2:** preço entre R$ 450.000 e R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_2'].shape[0]))
             st.write('**Nivel 3:** preço acima de  R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_3'].shape[0]))
