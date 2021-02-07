@@ -84,7 +84,6 @@ def main():
 
     elif choice == 'Plots':
         st.subheader("Data Visualization Dashboard and Maps")
-        st.write(df.head(3))
 
         if st.sidebar.checkbox("Interactive Map by Property Price"):
             st.subheader('**Map for Level!** ')
@@ -185,7 +184,7 @@ def main():
 
         if st.sidebar.checkbox("1. How many properties per level?"):
             #add_level(df)
-            st.table('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
+            st.write('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
             st.write('**Nivel 1:** preço entre R$ 321.950 e R$ 450.000 = **{}**.'.format(df[df['level'] == 'nivel_1'].shape[0]))
             st.write('**Nivel 2:** preço entre R$ 450.000 e R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_2'].shape[0]))
             st.write('**Nivel 3:** preço acima de  R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_3'].shape[0]))
