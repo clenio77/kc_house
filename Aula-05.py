@@ -12,6 +12,7 @@ def main():
         return df
 
     df = get_data('./datasets/dados.csv')
+    #df.drop(df.columns[[0]], axis=1, inplace=True)
 
 
     # Categorizing the Level column
@@ -45,16 +46,15 @@ def main():
     activities = ["EDA", "Plots", "Questions"]
     choice = st.sidebar.selectbox("Select Activities", activities)
 
-    st.title('Class 05 - Analisys House Rocket Company!')
+    #st.title('Class 05 - Analisys House Rocket Company!')
+    st.markdown("<h1 style='text-align: center; color:blue;'>Class 05 - Analisys House Rocket Company!</h1>",unsafe_allow_html=True)
 
     if choice == 'EDA':
-        st.subheader("**Exploratory Data Analysis**")
+        #st.subheader("**Exploratory Data Analysis**")
+        st.markdown("<h1 style='text-align: center;fonte-size:20px;'>Exploratory Data Analysis</h1>",unsafe_allow_html=True)
         #df = st.file_uploader("Upload a Dataset", type=["csv", "txt"])
-        df = get_data('./datasets/dados.csv')
+        #df = get_data('./datasets/dados.csv')
         st.write(df.head())
-        # if data is not None:
-        #     df = pd.read_csv(data)
-        
 
         if st.sidebar.checkbox("Number Of Rows and Columns"):
             st.write('{} linhas  e  {} colunas.'.format(df.shape[0],df.shape[1]))
@@ -67,7 +67,8 @@ def main():
             st.write(df.describe())
 
         if st.sidebar.checkbox("Verify null rows"):
-            st.write(df.isnull().sum())
+            lista_nulos = df.isnull().sum()
+            st.write(lista_nulos)
 
         if st.sidebar.checkbox("Deleting null lines"):
             df.dropna()
@@ -83,16 +84,17 @@ def main():
             st.dataframe(new_df)
 
     elif choice == 'Plots':
-        st.subheader("Data Visualization Dashboard and Maps")
-
+        #st.subheader("Data Visualization Dashboard and Maps")
+        st.markdown("<h1 style='text-align: center; color:blue; font-size: 22px;'>Data Visualization Dashboard and Maps</h1>", unsafe_allow_html=True)
         if st.sidebar.checkbox("Interactive Map by Property Price"):
-            st.subheader('**Map for Level!** ')
+            st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Property Type!</h2>",unsafe_allow_html=True)
+            #st.subheader('**Map for Level!** ')
             houses = df[['id', 'lat', 'long', 'price', 'level']].copy()
             fig = px.scatter_mapbox(
                 houses,
                 lat='lat',
                 lon='long',
-                color='level',
+                #color='level',
                 size='price',
                 color_continuous_scale=px.colors.cyclical.IceFire,
                 size_max=15,
@@ -116,11 +118,12 @@ def main():
                 houses['is_waterfront'] = df['is_waterfront'] == 'yes'
             elif selector == "No_waterFront":
                 houses['is_waterFront'] = df['is_waterfront'] == 'no'
-            st.write(houses)
+            st.plotly_chart(houses)
             #add_filter_interactive(df)
 
 
         if st.sidebar.checkbox("Map for Price"):
+            st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Price!</h2>",unsafe_allow_html=True)
             #is_check = st.sidebar.checkbox('Display Map for Price')
             #houses = df[['id', 'lat', 'long', 'price', 'level']]
             price_min = int(df['price'].min())
@@ -137,9 +140,9 @@ def main():
                 houses,
                 lat='lat',
                 lon='long',
-                color='level',
-                size='price',
-                color_continuous_scale=px.colors.cyclical.IceFire,
+                color='price',
+                size='level',
+                #color_continuous_scale=px.colors.cyclical.IceFire,
                 size_max=15,
                 zoom=10)
             fig.update_layout(mapbox_style='open-street-map')
@@ -148,7 +151,7 @@ def main():
             # st.write(fig)
 
         if st.sidebar.checkbox("Map for Number Bedrooms"):
-            #is_check = st.sidebar.checkbox('Display Map for Price')
+            st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Number Bedrooms!</h2>",unsafe_allow_html=True)
             houses = df[['id', 'lat', 'long', 'price', 'level','bedrooms']]
             bedrooms_min = int(df['bedrooms'].min())
             bedrooms_max = int(df['bedrooms'].max())
@@ -163,9 +166,9 @@ def main():
             fig = px.scatter_mapbox(houses,
                                     lat='lat',
                                     lon='long',
-                                    color='level',
+                                    color='price',
                                     size='bedrooms',
-                                    color_continuous_scale=px.colors.cyclical.IceFire,
+                                    #color_continuous_scale=px.colors.cyclical.IceFire,
                                     size_max=15,
                                     zoom=10)
             fig.update_layout(mapbox_style='open-street-map')
@@ -174,16 +177,17 @@ def main():
             #st.write(fig)
 
     elif choice == 'Questions':
-        st.title("Questions")
+        st.markdown("<h1 style='text-align: center; color:black; font-size: 36px;'>Questions!</h1>",unsafe_allow_html=True)
+        #st.title("Questions")
         #df = st.file_uploader("Upload a Dataset", type=["csv", "txt", "xlsx"])
-        df = get_data('./datasets/dados.csv')
+        #df = get_data('./datasets/dados.csv')
         # if df is not None:
         #     df = pd.read_csv(df)
         #     st.dataframe(df.head())
 
 
         if st.sidebar.checkbox("1. How many properties per level?"):
-            #add_level(df)
+            st.markdown("<h2 style='text-align: left; color:black; font-size: 26px;font-family:serif;'>How many properties for level?</h2>",unsafe_allow_html=True)
             st.write('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
             st.write('**Nivel 1:** preço entre R$ 321.950 e R$ 450.000 = **{}**.'.format(df[df['level'] == 'nivel_1'].shape[0]))
             st.write('**Nivel 2:** preço entre R$ 450.000 e R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_2'].shape[0]))
@@ -191,6 +195,7 @@ def main():
 
 
         if st.sidebar.checkbox("What is the average size of the living room of the buildings by size?"):
+            st.markdown("<h2 style='text-align: left; color:black; font-size: 26px;font-family: serif;'>What is the average size of the living room of the buildings by size?</h2>",unsafe_allow_html=True)
             size_0 = df[(df['sqft_living'] > 0) & (df['sqft_living'] < 1427)]
             size_1 = df[(df['sqft_living'] >= 1427) & (df['sqft_living'] < 1910)]
             size_2 = df[(df['sqft_living'] >= 1910) & (df['sqft_living'] < 2550)]
