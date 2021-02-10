@@ -102,7 +102,7 @@ def main():
             )
 
             fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=900, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
             st.plotly_chart(fig)
 
 
@@ -146,17 +146,18 @@ def main():
                 size_max=15,
                 zoom=10)
             fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=600, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
             st.plotly_chart(fig)
             # st.write(fig)
 
         if st.sidebar.checkbox("Map for Number Bedrooms"):
             st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Number Bedrooms!</h2>",unsafe_allow_html=True)
-            houses = df[['id', 'lat', 'long', 'price', 'level','bedrooms']]
+            #houses = df[['id', 'lat', 'long', 'price', 'level','bedrooms']]
             bedrooms_min = int(df['bedrooms'].min())
             bedrooms_max = int(df['bedrooms'].max())
             bedrooms_avg = int(df['bedrooms'].mean())
 
+            #bedrooms_slider = st.sidebar.slider("bedrooms range", 1, 33, (2, 15), 1)
             bedrooms_slider = st.sidebar.slider('Bedrooms range',
                                              bedrooms_min,
                                              bedrooms_max,
@@ -172,7 +173,7 @@ def main():
                                     size_max=15,
                                     zoom=10)
             fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=600, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
             st.plotly_chart(fig)
             #st.write(fig)
 
