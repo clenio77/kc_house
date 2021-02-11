@@ -3,7 +3,9 @@ import streamlit as st
 import plotly.express as px
 
 
+
 def main():
+    st.set_page_config(layout='wide')
     #functions
     @st.cache(allow_output_mutation=True)
     def get_data(path):
@@ -39,13 +41,13 @@ def main():
                                 size_max=15,
                                 zoom=10)
         fig.update_layout(mapbox_style='open-street-map')
-        fig.update_layout(height=600, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+        fig.update_layout(height=600, width=1200, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
         st.plotly_chart(fig)
         #st.write(fig)
 
     activities = ["EDA", "Plots", "Questions"]
     choice = st.sidebar.selectbox("Select Activities", activities)
-
+    
     #st.title('Class 05 - Analisys House Rocket Company!')
     st.markdown("<h1 style='text-align: center; color:blue;'>Class 05 - Analisys House Rocket Company!</h1>",unsafe_allow_html=True)
 
@@ -88,22 +90,8 @@ def main():
         st.markdown("<h1 style='text-align: center; color:blue; font-size: 22px;'>Data Visualization Dashboard and Maps</h1>", unsafe_allow_html=True)
         if st.sidebar.checkbox("Interactive Map by Property Price"):
             st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Property Type!</h2>",unsafe_allow_html=True)
-            #st.subheader('**Map for Level!** ')
             houses = df[['id', 'lat', 'long', 'price', 'level']].copy()
-            fig = px.scatter_mapbox(
-                houses,
-                lat='lat',
-                lon='long',
-                #color='level',
-                size='price',
-                color_continuous_scale=px.colors.cyclical.IceFire,
-                size_max=15,
-                zoom=10
-            )
-
-            fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
-            st.plotly_chart(fig)
+            map_interative(houses)
 
 
         if st.sidebar.checkbox("Adding Interactive Filters"):
@@ -136,19 +124,7 @@ def main():
                                              price_avg)
 
             houses = df[df['price'] < price_slider][['id', 'lat', 'long', 'price','level']]
-            fig = px.scatter_mapbox(
-                houses,
-                lat='lat',
-                lon='long',
-                color='price',
-                size='level',
-                #color_continuous_scale=px.colors.cyclical.IceFire,
-                size_max=15,
-                zoom=10)
-            fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
-            st.plotly_chart(fig)
-            # st.write(fig)
+            map_interative(houses)
 
         if st.sidebar.checkbox("Map for Number Bedrooms"):
             st.markdown("<h2 style='text-align: center; color:black; font-size: 18px;'>Map by Number Bedrooms!</h2>",unsafe_allow_html=True)
@@ -164,18 +140,8 @@ def main():
                                              bedrooms_avg)
 
             houses = df[df['bedrooms'] < bedrooms_slider][['id', 'lat', 'long', 'price','level','bedrooms']]
-            fig = px.scatter_mapbox(houses,
-                                    lat='lat',
-                                    lon='long',
-                                    color='price',
-                                    size='bedrooms',
-                                    #color_continuous_scale=px.colors.cyclical.IceFire,
-                                    size_max=15,
-                                    zoom=10)
-            fig.update_layout(mapbox_style='open-street-map')
-            fig.update_layout(height=600,width=1060, margin={'r': 200, 't': 0, 'l': 0, 'b': 0})
-            st.plotly_chart(fig)
-            #st.write(fig)
+            map_interative(houses)
+
 
     elif choice == 'Questions':
         st.markdown("<h1 style='text-align: center; color:black; font-size: 36px;'>Questions!</h1>",unsafe_allow_html=True)
@@ -188,11 +154,24 @@ def main():
 
 
         if st.sidebar.checkbox("1. How many properties per level?"):
+            df['level'] = df['price'].apply(lambda x: 0 if x < 321950 else
+            1 if (x > 321950) & (x < 450000) else
+            2 if (x > 450000) & (x < 645000) else 3)
+            for i in range(len(df)):
+                if (df.loc[i, 'price'] > 0) & (df.loc[i, 'price'] < 321950):
+                    df.loc[i, 'level'] = 'nivel_0'
+                elif (df.loc[i, 'price'] > 321950) & (df.loc[i, 'price'] < 450000):
+                    df.loc[i, 'level'] = 'nivel_1'
+                elif (df.loc[i, 'price'] > 450000) & (df.loc[i, 'price'] < 645000):
+                    df.loc[i, 'level'] = 'nivel_2'
+                else:
+                    df.loc[i, 'level'] = 'nivel_3'
             st.markdown("<h2 style='text-align: left; color:black; font-size: 26px;font-family:serif;'>How many properties for level?</h2>",unsafe_allow_html=True)
-            st.write('**Nivel 0:** preço entre R$ 0.00 e R$ 321.950 = **{}**'.format(df[df['level'] == 'nivel_0'].shape[0]))
-            st.write('**Nivel 1:** preço entre R$ 321.950 e R$ 450.000 = **{}**.'.format(df[df['level'] == 'nivel_1'].shape[0]))
-            st.write('**Nivel 2:** preço entre R$ 450.000 e R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_2'].shape[0]))
-            st.write('**Nivel 3:** preço acima de  R$ 645.000 = **{}**'.format(df[df['level'] == 'nivel_3'].shape[0]))
+            st.write('O nível 0  têm {} imóveis de preço entre R$ 0.00 e R$ 321.950'.format(df[df['level'] == 'nivel_0'].shape[0]))
+            st.write('O nível 1  têm {} imóveis de preço entre R$ 321.950 e R$ 450.000'.format(df[df['level'] == 'nivel_1'].shape[0]))
+            st.write('O nível 2  têm {} imóveis de preço entre R$ 450.000 e R$ 645.000'.format(df[df['level'] == 'nivel_2'].shape[0]))
+            st.write('O nível 2  têm {} imóveis de preço acima de  R$ 645.000'.format(df[df['level'] == 'nivel_3'].shape[0]))
+            
 
 
         if st.sidebar.checkbox("What is the average size of the living room of the buildings by size?"):
