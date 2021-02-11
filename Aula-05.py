@@ -13,8 +13,8 @@ def main():
         df['date'] = pd.to_datetime(df['date'])
         return df
 
-    df = get_data('./datasets/dados.csv')
-    #df.drop(df.columns[[0]], axis=1, inplace=True)
+    df = get_data('./datasets/df1.csv')
+
 
 
     # Categorizing the Level column
@@ -41,7 +41,7 @@ def main():
                                 size_max=15,
                                 zoom=10)
         fig.update_layout(mapbox_style='open-street-map')
-        fig.update_layout(height=600, width=1200, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+        fig.update_layout(height=600, width=1100, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
         st.plotly_chart(fig)
         #st.write(fig)
 
@@ -95,8 +95,9 @@ def main():
 
 
         if st.sidebar.checkbox("Adding Interactive Filters"):
-            houses = df[['id', 'lat', 'long', 'price', 'level', 'is_waterfront']]
-            #df['is_waterfront'] = df['waterfront'].apply(lambda x: 'yes' if x == 1 else 'no')
+
+            df['is_waterfront'] = df['waterfront'].apply(lambda x: 'yes' if x == 1 else 'no')
+            houses = df[['id','lat','long','price','level','is_waterfront']]
             # Select the type you want to view:
             selector = st.sidebar.radio(
                 "Select the type you want to view:",
@@ -104,10 +105,23 @@ def main():
             )
             if selector == "Is_waterFront":
                 houses['is_waterfront'] = df['is_waterfront'] == 'yes'
-            elif selector == "No_waterFront":
+            else:
                 houses['is_waterFront'] = df['is_waterfront'] == 'no'
-            st.plotly_chart(houses)
-            #add_filter_interactive(df)
+
+            #houses = df[['id', 'lat', 'long', 'price', 'level', 'is_waterfront']]
+            houses = df[df['is_waterfront'] == selector][['id', 'lat', 'long', 'price','level','is_waterfront']]
+            fig = px.scatter_mapbox(houses,
+                                    lat='lat',
+                                    lon='long',
+                                    color='is_waterfront',
+                                    size='price',
+                                    # color_continuous_scale=px.colors.cyclical.IceFire,
+                                    size_max=15,
+                                    zoom=10)
+            fig.update_layout(mapbox_style='open-street-map')
+            fig.update_layout(height=600, width=1100, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+            st.plotly_chart(fig)
+            
 
 
         if st.sidebar.checkbox("Map for Price"):
@@ -189,28 +203,6 @@ def main():
             st.write('A média do tamanho das salas de estar dos imóveis de Size_3 é {:.02f}'.format(
                 size_3.sqft_living.mean()))
 
-
-
-
-
-            
-
-
-
-
-    #read data
-    # @st.cache(allow_output_mutation=True)
-    # def get_data(path):
-    #     data = pd.read_csv(path)
-    #     #data['date'] = pd.to_datetime(data['date'])
-    #     return data
-    #
-    #
-    # # load data
-    # data = get_data('./datasets/dados.csv')
-    #
-    # #view Data
-    # st.dataframe(data)
 
 
 if __name__ == '__main__':
