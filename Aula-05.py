@@ -41,7 +41,7 @@ def main():
                                 size_max=15,
                                 zoom=10)
         fig.update_layout(mapbox_style='open-street-map')
-        fig.update_layout(height=600, width=1100, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
+        fig.update_layout(height=600, width=1200, margin={'r': 0, 't': 0, 'l': 0, 'b': 0})
         st.plotly_chart(fig)
         #st.write(fig)
 
